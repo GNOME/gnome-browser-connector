@@ -82,7 +82,12 @@ define('gs-chrome', ['jquery'], function($) {
 							apiObject.shellVersion			= response.shellVersion;
 							apiObject.versionValidationEnabled	= response.versionValidationEnabled;
 
-							if(!response.connectorVersion || response.connectorVersion != GS_CHROME_VERSION)
+							if(!response.connectorVersion ||
+									(
+										response.connectorVersion != 7.1 &&
+										response.connectorVersion != GS_CHROME_VERSION
+									)
+							)
 							{
 								if(!response.connectorVersion)
 									response.connectorVersion = GSC.getMessage('older_connector');
