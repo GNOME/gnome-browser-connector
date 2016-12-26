@@ -85,6 +85,7 @@ define('gs-chrome', ['jquery'], function($) {
 							if(!response.connectorVersion ||
 									(
 										response.connectorVersion != 7.1 &&
+										response.connectorVersion != 7.2 &&
 										response.connectorVersion != GS_CHROME_VERSION
 									)
 							)
