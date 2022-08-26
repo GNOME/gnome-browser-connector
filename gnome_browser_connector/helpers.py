@@ -14,7 +14,7 @@ def get_variant(data: Any) -> GLib.Variant:
         variant_builder: GLib.VariantBuilder = GLib.VariantBuilder.new(GLib.VariantType.new('av'))
 
         for value in data:
-            variant_builder.add_value(GLib.Variant.new_variant(self.get_variant(value)))
+            variant_builder.add_value(GLib.Variant.new_variant(get_variant(value)))
 
         return variant_builder.end()
     elif isinstance(data, dict):
@@ -28,7 +28,7 @@ def get_variant(data: Any) -> GLib.Variant:
 
             variant_builder.add_value(
                 GLib.Variant.new_dict_entry(
-                    self.get_variant(key_string), GLib.Variant.new_variant(self.get_variant(data[key]))
+                    get_variant(key_string), GLib.Variant.new_variant(get_variant(data[key]))
                 )
             )
 
