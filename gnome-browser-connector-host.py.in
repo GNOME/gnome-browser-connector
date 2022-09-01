@@ -3,7 +3,7 @@
 
 import sys
 
-from gnome_browser_connector import connector
+from gnome_browser_connector.main import connector
 
 if __name__ == '__main__':
     sys.exit(connector())
