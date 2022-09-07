@@ -1,3 +1,12 @@
+= 2022-09-07 gnome-browser-connector 42.1 =
+
+== Changes ==
+ * Added detected python path in scripts shebang.
+ * Restored compatibility with Python 3.8.
+ * Fix errors in `get_variant` helper that leads to connector crash (Martin D).
+ * Fixed build system error when python dependencies are missing.
+
+
 = 2022-07-23 gnome-browser-connector 42.0 =
 
 == Changes ==
