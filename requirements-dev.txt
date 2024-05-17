@@ -127,6 +127,9 @@ pyflakes==3.0.1 \
 pygobject==3.48.2 \
     --hash=sha256:c3c0a7afbe5b2c1c64dc0530109b4dd571085153dbedfbccb8ec7c5ad233f977
     # via gnome-browser-connector (setup.py)
+pygobject-stubs==2.11.0 \
+    --hash=sha256:e1c7e32658213ae711d8afc5ea083a434231b8b588d1de23f50d5705a9c8eefe
+    # via gnome-browser-connector (setup.py)
 pylint==3.0.3 \
     --hash=sha256:58c2398b0301e049609a8429789ec6edf3aabe9b6c5fec916acd18639c16de8b \
     --hash=sha256:7a1585285aefc5165db81083c3e06363a27448f6b467b3b0f30dbd0ac1f73810

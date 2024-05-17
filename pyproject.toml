@@ -24,6 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "PyGObject-stubs==2.11.0",
     "black==24.3.0",
     "flake8==6.0.0",
     "isort==5.12.0",
