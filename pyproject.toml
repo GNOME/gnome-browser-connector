@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gnome-browser-connector"
+version = "46a1"
+authors = [
+    {name = "Yuri Konotopov", email = "ykonotopov@gnome.org"},
+]
+description = "OS-native connector counterpart for GNOME Shell browser extension"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["gnome", "gobject-introspection"]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    "PyGObject",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==24.3.0",
+    "flake8==6.0.0",
+    "isort==5.12.0",
+    "pip-tools==7.4.1",
+    "pylint==3.0.3",
+    "pytest==7.4.4",
+]
+
+[project.scripts]
+gnome-browser-connector = "gnome_browser_connector.main:main"
+gnome-browser-connector-host = "gnome_browser_connector.main:connector"
+
+[project.urls]
+Homepage = "https://gnome.pages.gitlab.gnome.org/gnome-shell-integration"
+Repository = "https://gitlab.gnome.org/GNOME/gnome-browser-connector.git"
+Issues = "https://gitlab.gnome.org/GNOME/gnome-browser-connector/-/issues"
+Changelog = "https://gitlab.gnome.org/GNOME/gnome-browser-connector/-/commits/master"
+
+[tool.setuptools.packages.find]
+include = ["gnome_browser_connector*"]
+
+[tool.black]
+preview = true
+enable-unstable-feature = ["string_processing"]
+
+[tool.isort]
+profile = "black"
+default_section = "THIRDPARTY"
+known_first_party = "gnome_browser_connector"
+
+[tool.pylint.main]
+ignore-patterns = "^\\.#"
+jobs = 0
+disable = [
+    "C0111",
+    "C0115",
+    "C0116",
+    "W1203",
+]
+signature-mutators=[
+    "click.decorators.option",
+    "click.decorators.argument",
+    "click.decorators.version_option",
+    "click.decorators.help_option",
+    "click.decorators.pass_context",
+    "click.decorators.confirmation_option",
+]
+
+[tool.pyright]
+exclude = [
+    "build/",
+    "contrib/",
+    "dist/",
+    "**/*.egg-info",
+]
+reportMissingModuleSource = false
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+pythonpath = [
+    "."
+]
+testpaths = [
+    "tests",
+]
