@@ -21,7 +21,7 @@ class BaseGioApplication(Cleanable, Gio.Application, metaclass=BaseMeta):
         dbus_connection = super().get_dbus_connection()
 
         if not dbus_connection:
-            raise Exception('No DBus connection available')
+            raise Exception("No DBus connection available")
 
         return dbus_connection
 
@@ -29,8 +29,10 @@ class BaseGioApplication(Cleanable, Gio.Application, metaclass=BaseMeta):
         self,
         priority: int,
         condition: GLib.IOCondition,
-        callback: Callable[[GLib.IOChannel, GLib.IOCondition, Optional[GLib.Variant]], None],
-        user_data: Optional[GLib.Variant] = None
+        callback: Callable[
+            [GLib.IOChannel, GLib.IOCondition, Optional[GLib.Variant]], None
+        ],
+        user_data: Optional[GLib.Variant] = None,
     ) -> None:
         pass
 
