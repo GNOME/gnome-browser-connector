@@ -130,7 +130,7 @@ class Connector(ApplicationHandler):
         self._log.debug("Signal: from %s", name)
 
     def on_setting_changed(self, settings: Gio.Settings, key: str) -> None:
-        if not key in (
+        if key not in (
             self.DISABLE_USER_EXTENSIONS_KEY,
             self.EXTENSION_DISABLE_VERSION_CHECK_KEY,
         ):
