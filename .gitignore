@@ -11,5 +11,6 @@
 .vscode
 
 # Our stuff
+*.egg-info
 *.pyc
 /builddir
