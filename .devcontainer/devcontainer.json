@@ -63,7 +63,8 @@
                     "builddir/**": true
                 }
             },
-            "extensions": [
+            "extensions": [,
+                "mesonbuild.mesonbuild",
                 "ms-azuretools.vscode-docker",
                 "ms-python.python",
                 "ms-python.black-formatter",
