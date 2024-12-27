@@ -69,7 +69,7 @@ black:
     VALIDATE_TOOL: black
     VALIDATE_TOOL_ARGS: --check --diff .
 
-# https://gitlab.freedesktop.org/freedesktop/ci-templates/-/blob/801093be0b88f23c8dbabe9cfce7134548f7ccdc/templates/ci-fairy.yml
+# https://gitlab.gnome.org/Infrastructure/freedesktop-ci-templates/-/blob/801093be0b88f23c8dbabe9cfce7134548f7ccdc/templates/ci-fairy.yml
 # https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/876ca5d2de92efbea3f2379839073747c9e0dd55/.gitlab-ci.yml#L82
 check commits:
   stage: validate
