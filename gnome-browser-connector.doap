@@ -10,7 +10,7 @@
 	<description xml:lang="en">
 		OS-native connector counterpart for GNOME Shell browser extension.
 	</description>
-	<homepage rdf:resource="https://wiki.gnome.org/Projects/GnomeShellIntegration" />
+	<homepage rdf:resource="https://gnome.pages.gitlab.gnome.org/gnome-browser-integration/pages/installation-guide.html" />
 	<bug-database rdf:resource="https://gitlab.gnome.org/nE0sIghT/gnome-browser-connector/issues" />
 	<download-page rdf:resource="http://download.gnome.org/sources/chrome-gnome-shell/" />
 	<programming-language>Python</programming-language>
