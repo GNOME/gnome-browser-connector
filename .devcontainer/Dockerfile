@@ -14,7 +14,7 @@ RUN \
         git \
         git-gui \
         gitk \
-        libgirepository1.0-dev \
+        libgirepository-2.0-dev \
         sudo \
     ;\
     pip --disable-pip-version-check --no-cache-dir install \
