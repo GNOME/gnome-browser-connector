@@ -16,6 +16,7 @@ RUN \
         gitk \
         libgirepository-2.0-dev \
         sudo \
+        xauth \
     ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r /tmp/pip-tmp/requirements-dev.txt \
