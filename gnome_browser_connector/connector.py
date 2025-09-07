@@ -187,7 +187,7 @@ class Connector(ApplicationHandler):
         message_length = len(message.encode("utf-8"))
 
         if message_length > 1024 * 1024:
-            raise Exception(f'Too long message ({message_length}): "{message}"')
+            raise RuntimeError(f'Too long message ({message_length}): "{message}"')
 
         try:
             stdout: GLib.IOChannel = GLib.IOChannel.unix_new(sys.stdout.fileno())
@@ -201,7 +201,7 @@ class Connector(ApplicationHandler):
             # Write the message itself.
             stdout.write_chars(message.encode("utf-8"), message_length)
         except OSError as e:
-            raise Exception(f"IOError occured: {e.strerror}") from e
+            raise RuntimeError(f"IOError occured: {e.strerror}") from e
 
     def process_request(self, request: dict[str, Any]) -> None:
         self._log.debug("Execute: to %s", request["execute"])

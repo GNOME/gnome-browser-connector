@@ -21,7 +21,7 @@ class BaseGioApplication(Cleanable, Gio.Application, metaclass=BaseMeta):
         dbus_connection = super().get_dbus_connection()
 
         if not dbus_connection:
-            raise Exception("No DBus connection available")
+            raise RuntimeError("No DBus connection available")
 
         return dbus_connection
 

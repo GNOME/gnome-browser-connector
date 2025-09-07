@@ -38,7 +38,7 @@ def get_variant(data: Any) -> GLib.Variant:
 
         return variant_builder.end()
     else:
-        raise Exception(f"Unknown data type: {type(data)}")
+        raise RuntimeError(f"Unknown data type: {type(data)}")
 
 
 # https://wiki.gnome.org/Projects/GnomeShell/Extensions/UUIDGuidelines
@@ -50,9 +50,9 @@ def obtain_gio_settings(schema: str) -> Gio.Settings:
     source: Gio.SettingsSchemaSource = Gio.SettingsSchemaSource.get_default()
 
     if source is None:
-        raise Exception("No Gio.Settings schemas are installed")
+        raise RuntimeError("No Gio.Settings schemas are installed")
 
     if source.lookup(schema, True) is None:
-        raise Exception("Settings schema with id `{schema}` is missing")
+        raise RuntimeError("Settings schema with id `{schema}` is missing")
 
     return Gio.Settings.new(schema)
