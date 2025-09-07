@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import struct
 import sys
-from typing import Any, Optional
+from typing import Any
 
 from gi.repository import Gio, GLib, GObject
 
@@ -77,23 +77,21 @@ class Connector(ApplicationHandler):
                 self._shell_signal_id
             )
 
-        if self.disable_user_extensions_signal_id:
-            if self._shell_settings is not None:
-                self._shell_settings.disconnect(self.disable_user_extensions_signal_id)
+        if self.disable_user_extensions_signal_id and self._shell_settings is not None:
+            self._shell_settings.disconnect(self.disable_user_extensions_signal_id)
 
-        if self.disable_version_check_signal_id:
-            if self._shell_settings is not None:
-                self._shell_settings.disconnect(self.disable_version_check_signal_id)
+        if self.disable_version_check_signal_id and self._shell_settings is not None:
+            self._shell_settings.disconnect(self.disable_version_check_signal_id)
 
     def on_dbus_signal(
         self,
         connection: Gio.DBusConnection,
-        sender_name: Optional[str],
+        sender_name: str | None,
         object_path: str,
         interface_name: str,
         signal_name: str,
         parameters: GLib.Variant,
-        user_data: Optional[Any],
+        user_data: Any | None,
     ) -> None:
         self._log.debug("Signal %s from %s", signal_name, interface_name)
 
@@ -152,8 +150,8 @@ class Connector(ApplicationHandler):
         self,
         source: GLib.IOChannel,
         condition: GLib.IOCondition,
-        data: Optional[GObject.Object],
-    ) -> Optional[bool]:
+        data: GObject.Object | None,
+    ) -> bool | None:
         self._log.debug("On input")
         text_length_bytes: bytes = source.read(self.MESSAGE_LENGTH_SIZE)
 
@@ -202,8 +200,8 @@ class Connector(ApplicationHandler):
 
             # Write the message itself.
             stdout.write_chars(message.encode("utf-8"), message_length)
-        except IOError as e:
-            raise Exception(f"IOError occured: {e.strerror}")
+        except OSError as e:
+            raise Exception(f"IOError occured: {e.strerror}") from e
 
     def process_request(self, request: dict[str, Any]) -> None:
         self._log.debug("Execute: to %s", request["execute"])
@@ -212,17 +210,14 @@ class Connector(ApplicationHandler):
             shell_version = self._shell_proxy.get_cached_property("ShellVersion")
 
             if shell_version is not None:
-                if (
-                    self.EXTENSION_DISABLE_VERSION_CHECK_KEY
-                    in self._shell_settings.keys()
-                ):
+                if self.EXTENSION_DISABLE_VERSION_CHECK_KEY in self._shell_settings:
                     disable_version_check: bool = self._shell_settings.get_boolean(
                         self.EXTENSION_DISABLE_VERSION_CHECK_KEY
                     )
                 else:
                     disable_version_check = False
 
-                if self.DISABLE_USER_EXTENSIONS_KEY in self._shell_settings.keys():
+                if self.DISABLE_USER_EXTENSIONS_KEY in self._shell_settings:
                     disable_user_extensions: bool = self._shell_settings.get_boolean(
                         self.DISABLE_USER_EXTENSIONS_KEY
                     )
@@ -257,17 +252,17 @@ class Connector(ApplicationHandler):
                 )
 
             if not self._shell_signal_id:
-                self._shell_signal_id: (
-                    int
-                ) = self._application.get_dbus_connection2().signal_subscribe(
-                    "org.gnome.Shell",
-                    "org.gnome.Shell.Extensions",
-                    "ExtensionStatusChanged",
-                    "/org/gnome/Shell",
-                    None,
-                    Gio.DBusSignalFlags.NONE,
-                    self.on_dbus_signal,
-                    None,
+                self._shell_signal_id: int = (
+                    self._application.get_dbus_connection2().signal_subscribe(
+                        "org.gnome.Shell",
+                        "org.gnome.Shell.Extensions",
+                        "ExtensionStatusChanged",
+                        "/org/gnome/Shell",
+                        None,
+                        Gio.DBusSignalFlags.NONE,
+                        self.on_dbus_signal,
+                        None,
+                    )
                 )
 
             if not self.disable_user_extensions_signal_id:
@@ -308,7 +303,7 @@ class Connector(ApplicationHandler):
                     continue
 
                 if extension["enable"]:
-                    if not extension["uuid"] in uuids:
+                    if extension["uuid"] not in uuids:
                         uuids.append(extension["uuid"])
                 elif extension["uuid"] in uuids:
                     uuids = [value for value in uuids if value != extension["uuid"]]
@@ -391,7 +386,7 @@ class Connector(ApplicationHandler):
 
     # Helpers
     def dbus_call_response(
-        self, method: str, parameters: Optional[GLib.Variant], result_property: str
+        self, method: str, parameters: GLib.Variant | None, result_property: str
     ):
         try:
             result = self._shell_proxy.call_sync(
@@ -406,7 +401,7 @@ class Connector(ApplicationHandler):
         self.send_message({"success": False, "message": message})
 
     def set_shell_boolean(self, key: str, value: bool) -> bool:
-        if key in self._shell_settings.keys():
-            return self._shell_settings.set_boolean(key, True if value else False)
+        if key in self._shell_settings:
+            return self._shell_settings.set_boolean(key, bool(value))
 
         return False

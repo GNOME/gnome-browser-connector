@@ -1,6 +1,6 @@
 # SPDX-License-Identifer: GPL-3.0-or-later
 
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from gi.repository import Gio, GLib, GObject
 
@@ -105,7 +105,7 @@ class Service(ApplicationHandler):
             GLib.Variant.new_tuple(notification_name),
         )
 
-    def on_service_timeout(self, data: Optional[GObject.Object]) -> bool:
+    def on_service_timeout(self, data: GObject.Object | None) -> bool:
         self._log.debug("On service timeout")
         self._application.clean_resources()
 

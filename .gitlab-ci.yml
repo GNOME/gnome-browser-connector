@@ -1,6 +1,8 @@
 ---
 variables:
   FF_NETWORK_PER_BUILD: 'true'
+  FF_SCRIPT_SECTIONS: 'true'
+
   PYTHON_VERSION: '3.10'
 
 workflow:
@@ -32,10 +34,13 @@ stages:
     - .pip cache
   image: python:$PYTHON_VERSION
   before_script:
+    - python --version
+
     - apt update
     - apt install -y
         cmake
         libgirepository-2.0-dev
+
     - pip install -r requirements-dev.txt
   needs: []
 
@@ -48,26 +53,21 @@ stages:
       "${VALIDATE_TOOL}" ${VALIDATE_TOOL_ARGS}
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  variables:
+    VALIDATE_TOOL: ruff
 
-flake8:
+lint:
   extends:
     - .validate defaults
   variables:
-    VALIDATE_TOOL: flake8
+    VALIDATE_TOOL_ARGS: check
 
-isort:
+format:
   extends:
     - .validate defaults
   variables:
-    VALIDATE_TOOL: isort
-    VALIDATE_TOOL_ARGS: --check --diff .
+    VALIDATE_TOOL_ARGS: format --check --diff
 
-black:
-  extends:
-    - .validate defaults
-  variables:
-    VALIDATE_TOOL: black
-    VALIDATE_TOOL_ARGS: --check --diff .
 
 # https://gitlab.freedesktop.org/freedesktop/ci-templates/-/blob/801093be0b88f23c8dbabe9cfce7134548f7ccdc/templates/ci-fairy.yml
 # https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/876ca5d2de92efbea3f2379839073747c9e0dd55/.gitlab-ci.yml#L82
@@ -103,7 +103,6 @@ security (trivy):
     TRIVY_CACHE_DIR: .trivy
     TRIVY_EXIT_CODE: 1
     TRIVY_SCANNERS: vuln,config
-
 
 security (pip-audit):
   extends:

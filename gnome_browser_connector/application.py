@@ -5,8 +5,9 @@ from __future__ import annotations
 import signal
 import sys
 import traceback
+from collections.abc import Callable, Sequence
 from types import TracebackType
-from typing import Any, Callable, Optional, Sequence
+from typing import Any
 
 from gi.repository import Gio, GLib
 
@@ -85,36 +86,35 @@ class Application(BaseGioApplication):
             params = GLib.Uri.parse_params(
                 uri.get_query(), -1, "&", GLib.UriParamsFlags.NONE
             )
-            if "action" in params:
-                if params["action"] == "install":
-                    try:
-                        Gio.DBusProxy.new_sync(
-                            self.get_dbus_connection2(),
-                            Gio.DBusProxyFlags.NONE,
-                            None,
-                            "org.gnome.Shell",
-                            "/org/gnome/Shell",
-                            "org.gnome.Shell.Extensions",
-                            None,
-                        ).call_sync(
-                            "InstallRemoteExtension",
-                            GLib.Variant.new_tuple(GLib.Variant.new_string(uuid)),
-                            Gio.DBusCallFlags.NONE,
-                            -1,
-                            None,
-                        )
-                    except GLib.GError as e:
-                        self._log.fatal(f"Unable to install extension: {e.message}")
-                        continue
+            if "action" in params and params["action"] == "install":
+                try:
+                    Gio.DBusProxy.new_sync(
+                        self.get_dbus_connection2(),
+                        Gio.DBusProxyFlags.NONE,
+                        None,
+                        "org.gnome.Shell",
+                        "/org/gnome/Shell",
+                        "org.gnome.Shell.Extensions",
+                        None,
+                    ).call_sync(
+                        "InstallRemoteExtension",
+                        GLib.Variant.new_tuple(GLib.Variant.new_string(uuid)),
+                        Gio.DBusCallFlags.NONE,
+                        -1,
+                        None,
+                    )
+                except GLib.GError as e:
+                    self._log.fatal(f"Unable to install extension: {e.message}")
+                    continue
 
     def stdin_add_watch(
         self,
         priority: int,
         condition: GLib.IOCondition,
         callback: Callable[
-            [GLib.IOChannel, GLib.IOCondition, Optional[GLib.Variant]], None
+            [GLib.IOChannel, GLib.IOCondition, GLib.Variant | None], None
         ],
-        user_data: Optional[GLib.Variant] = None,
+        user_data: GLib.Variant | None = None,
     ) -> None:
         GLib.io_add_watch(self._stdin, priority, condition, callback, None)
 
@@ -144,14 +144,14 @@ class Application(BaseGioApplication):
         self,
         source: GLib.IOChannel,
         condition: GLib.IOCondition,
-        data: Optional[GLib.Variant],
+        data: GLib.Variant | None,
     ):
         self._log.debug("On hup: %s", str(condition))
         self.clean_resources()
 
         return False
 
-    def on_sigint(self, data: Optional[Any]):
+    def on_sigint(self, data: Any | None):
         self._log.debug("On sigint")
         self.clean_resources()
 

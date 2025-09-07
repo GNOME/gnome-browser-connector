@@ -1,7 +1,7 @@
 # SPDX-License-Identifer: GPL-3.0-or-later
 
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from gi.repository import Gio, GLib
 
@@ -30,9 +30,9 @@ class BaseGioApplication(Cleanable, Gio.Application, metaclass=BaseMeta):
         priority: int,
         condition: GLib.IOCondition,
         callback: Callable[
-            [GLib.IOChannel, GLib.IOCondition, Optional[GLib.Variant]], None
+            [GLib.IOChannel, GLib.IOCondition, GLib.Variant | None], None
         ],
-        user_data: Optional[GLib.Variant] = None,
+        user_data: GLib.Variant | None = None,
     ) -> None:
         pass
 
